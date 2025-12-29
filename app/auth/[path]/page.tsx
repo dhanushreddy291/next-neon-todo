@@ -1,10 +1,6 @@
-import { AuthView, authViewPaths } from '@neondatabase/neon-js/auth/react/ui';
+import { AuthView } from '@neondatabase/neon-js/auth/react/ui';
 
 export const dynamicParams = false;
-
-export function generateStaticParams() {
-    return Object.values(authViewPaths).map((path) => ({ path }));
-}
 
 export default async function AuthPage({ params }: { params: Promise<{ path: string }> }) {
     const { path } = await params;
