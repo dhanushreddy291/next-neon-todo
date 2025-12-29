@@ -1,36 +1,134 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://neon.com/brand/neon-logo-dark-color.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://neon.com/brand/neon-logo-light-color.svg">
+  <img width="250px" alt="Neon Logo fallback" src="https://neon.com/brand/neon-logo-dark-color.svg">
+</picture>
 
-## Getting Started
+### Next.js Todo App with Neon Auth & Drizzle ORM
 
-First, run the development server:
+A fully functional Next.js Todo application that demonstrates how to integrate **Neon Auth** for authentication and **Drizzle ORM** for database management.
+
+---
+
+This repository demonstrates how to build a modern web application using [**Next.js**](https://nextjs.org/), [**Neon Auth**](https://neon.com/docs/auth/overview), and [**Drizzle ORM**](https://orm.drizzle.team/).
+
+By leveraging **Server Actions** in Next.js, we can securely handle authentication and database operations on the server side, providing a seamless and secure user experience.
+
+Follow the full guide on [Neon: Getting started with Neon Auth and Next.js](https://neon.com/guides/neon-auth-nextjs) for a step-by-step walkthrough.
+
+## ✨ Key features
+
+-   **Next.js App Router**: Built with the latest Next.js features, including Server Components and Server Actions.
+-   **Neon Auth**: Integrated authentication and session management powered by Neon.
+-   **Drizzle ORM**: Type-safe database operations and schema management.
+-   **Server Actions**: Secure server-side logic for database interactions, eliminating the need for separate API routes.
+-   **Neon Auth UI**: Pre-built, customizable UI components for sign-in, sign-up, and account management.
+
+## 🚀 Get started
+
+### Prerequisites
+
+Before you start, you'll need:
+
+1.  A **[Neon account](https://console.neon.tech)**.
+2.  **[Node.js](https://nodejs.org/)** (v18+) installed locally.
+
+### 1. Initial setup
+
+Clone this repository and install the dependencies.
+
+```bash
+# Clone the repository
+git clone https://github.com/dhanushreddy291/next-neon-todo.git
+cd next-neon-todo
+
+# Install dependencies
+npm install
+```
+
+### 2. Configure Neon
+
+1.  Create a new project in the [Neon Console](https://console.neon.tech).
+2.  Navigate to the **Neon Auth** tab and click **Enable**.
+3.  Copy your **Auth Base URL** and **Database Connection String**.
+
+### 3. Environment Variables
+
+Create a `.env` file in the root directory.
+
+```bash
+cp .env.example .env
+```
+
+Update the `.env` file with your Neon project details. Update the following variables:
+
+-  `DATABASE_URL`: Found in the Neon Console under **Dashboard -> Connect**.
+    <p align="left">
+      <img src="./images/connection_details.png" alt="Neon Connection Details" width="500"/>
+    </p>
+-  `NEON_AUTH_BASE_URL`: Found in the Neon Console under **Auth** tab.
+    <p align="left">
+      <img src="./images/neon-auth-base-url.png" alt="Neon Auth URL" width="500"/> 
+    </p>
+
+```env
+DATABASE_URL="postgresql://[user]:[password]@[neon_hostname]/[dbname]?sslmode=require"
+NEON_AUTH_BASE_URL="https://ep-xxx.neon.tech/neondb/auth"
+```
+
+### 4. Database Setup
+
+We use Drizzle ORM to manage the database schema.
+
+```bash
+# Generate the database migrations
+npx drizzle-kit generate
+
+# Apply the database migrations
+npx drizzle-kit migrate
+```
+
+> This creates the `todos` table in your Neon database, linked to the `neon_auth` user table.
+
+### 5. Run the App
+
+Start the development server.
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:8080` to see the app. You will be redirected to the sign-in page. You can create a new account or sign in with an existing one.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+<p align="center">
+    <img src="./images/neon-auth-nextjs-todo-demo.png" alt="Next.js Todo App with Neon Auth & Drizzle ORM" width="600"/>
+</p>
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ⚙️ How it works
 
-## Learn More
+This architecture relies on three core concepts working together:
 
-To learn more about Next.js, take a look at the following resources:
+1.  **Authentication**:
+    The app uses `@neondatabase/neon-js` to handle authentication. The `NeonAuthUIProvider` in `app/layout.tsx` wraps the application, providing authentication context and UI components.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2.  **Server Actions**:
+    Database operations are handled via Server Actions in `app/actions.ts`. These actions use `neonAuth()` to verify the user's session before performing any database queries.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+    ```typescript
+    // app/actions.ts
+    export async function getTodos() {
+      const { user } = await neonAuth();
+      if (!user) throw new Error('Unauthorized');
+      
+      return db.select().from(todos).where(eq(todos.userId, user.id));
+    }
+    ```
 
-## Deploy on Vercel
+3.  **Database (Drizzle ORM)**:
+    Drizzle ORM provides a type-safe way to interact with the Postgres database. The schema is defined in `app/db/schema.ts`, including relationships between the `todos` table and the `neon_auth` user table.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📚 Learn more
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+-   [Neon Guide: Getting started with Neon Auth and Next.js](https://neon.com/guides/neon-auth-nextjs)
+-   [Neon Auth Overview](https://neon.com/docs/auth/overview)
+-   [Drizzle ORM Documentation](https://orm.drizzle.team/)
