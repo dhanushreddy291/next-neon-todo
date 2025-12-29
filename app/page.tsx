@@ -1,15 +1,7 @@
-import { neonAuth } from '@neondatabase/neon-js/auth/next/server';
 import { getTodos, addTodo } from '@/app/actions';
 import { TodoItem } from '@/app/components/TodoItem';
-import { redirect } from 'next/navigation';
 
 export default async function Home() {
-  const { session } = await neonAuth();
-
-  // If not logged in, redirect to sign-in page
-  if (!session) { redirect('/auth/signin'); }
-
-  // Fetch data on the server
   const todos = await getTodos();
 
   return (
