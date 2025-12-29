@@ -33,7 +33,7 @@ Before you start, you'll need:
 1.  A **[Neon account](https://console.neon.tech)**.
 2.  **[Node.js](https://nodejs.org/)** (v18+) installed locally.
 
-### 1. Initial setup
+### Initial setup
 
 Clone this repository and install the dependencies.
 
@@ -46,13 +46,13 @@ cd next-neon-todo
 npm install
 ```
 
-### 2. Configure Neon
+### Configure Neon
 
 1.  Create a new project in the [Neon Console](https://console.neon.tech).
 2.  Navigate to the **Neon Auth** tab and click **Enable**.
 3.  Copy your **Auth Base URL** and **Database Connection String**.
 
-### 3. Environment Variables
+### Configure environment variables
 
 Create a `.env` file in the root directory.
 
@@ -76,7 +76,7 @@ DATABASE_URL="postgresql://[user]:[password]@[neon_hostname]/[dbname]?sslmode=re
 NEON_AUTH_BASE_URL="https://ep-xxx.neon.tech/neondb/auth"
 ```
 
-### 4. Database Setup
+### Database setup
 
 We use Drizzle ORM to manage the database schema.
 
@@ -90,7 +90,7 @@ npx drizzle-kit migrate
 
 > This creates the `todos` table in your Neon database, linked to the `neon_auth` user table.
 
-### 5. Run the App
+### Run the application
 
 Start the development server.
 
