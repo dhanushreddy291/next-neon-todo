@@ -1,5 +1,5 @@
 import { authClient } from '@/lib/auth/client';
-import { NeonAuthUIProvider, UserButton } from '@neondatabase/neon-js/auth/react/ui';
+import { NeonAuthUIProvider, UserButton } from '@neondatabase/auth/react';
 import './globals.css';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

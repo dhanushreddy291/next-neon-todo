@@ -1,15 +1,15 @@
 'use server';
 
-import { neonAuth } from '@neondatabase/neon-js/auth/next/server';
 import { db } from '@/app/db';
 import { todos } from '@/app/db/schema';
+import { auth } from '@/lib/auth/server';
 import { eq, desc, and } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 
 async function getAuthUser() {
-    const { user } = await neonAuth();
-    if (!user) throw new Error('Unauthorized');
-    return user;
+    const { data } = await auth.getSession();
+    if (!data?.user) throw new Error('Unauthorized');
+    return data.user;
 }
 
 export async function getTodos() {

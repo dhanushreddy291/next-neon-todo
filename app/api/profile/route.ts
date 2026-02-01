@@ -1,17 +1,16 @@
-import { neonAuth } from '@neondatabase/neon-js/auth/next/server';
+import { auth } from '@/lib/auth/server';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
     // Validate session on the server
-    const { session, user } = await neonAuth();
-
-    if (!session) {
+    const { data } = await auth.getSession();
+    if (!data?.session) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Return secure data
     return NextResponse.json({
         message: 'Secure data retrieved',
-        user: user,
+        user: data.user,
     });
 }

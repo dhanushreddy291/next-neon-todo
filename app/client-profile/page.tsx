@@ -4,7 +4,7 @@ import { authClient } from '@/lib/auth/client';
 
 export default function ClientProfilePage() {
     // The hook automatically updates if the session changes
-    const { data, isPending, error } = authClient.useSession();
+    const { data, isPending } = authClient.useSession();
 
     if (isPending) return <div className="p-6">Loading session...</div>;
 

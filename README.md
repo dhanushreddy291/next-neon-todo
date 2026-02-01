@@ -74,6 +74,7 @@ Update the `.env` file with your Neon project details. Update the following vari
 ```env
 DATABASE_URL="postgresql://[user]:[password]@[neon_hostname]/[dbname]?sslmode=require"
 NEON_AUTH_BASE_URL="https://ep-xxx.neon.tech/neondb/auth"
+NEON_AUTH_COOKIE_SECRET="your_random_cookie_secret" # Generate using `openssl rand -base64 32`
 ```
 
 ### Database setup
@@ -109,18 +110,18 @@ Open `http://localhost:8080` to see the app. You will be redirected to the sign-
 This architecture relies on three core concepts working together:
 
 1.  **Authentication**:
-    The app uses `@neondatabase/neon-js` to handle authentication. The `NeonAuthUIProvider` in `app/layout.tsx` wraps the application, providing authentication context and UI components.
+    The app uses `@neondatabase/auth` to handle authentication. The `NeonAuthUIProvider` in `app/layout.tsx` wraps the application, providing authentication context and UI components.
 
 2.  **Server Actions**:
-    Database operations are handled via Server Actions in `app/actions.ts`. These actions use `neonAuth()` to verify the user's session before performing any database queries.
+    Database operations are handled via Server Actions in `app/actions.ts`. These actions use `getSession()` to verify the user's session before performing any database queries.
 
     ```typescript
     // app/actions.ts
     export async function getTodos() {
-      const { user } = await neonAuth();
-      if (!user) throw new Error('Unauthorized');
+      const { data } = await auth.getSession();
+      if (!data?.user) throw new Error('Unauthorized');
       
-      return db.select().from(todos).where(eq(todos.userId, user.id));
+      return db.select().from(todos).where(eq(todos.userId, data.user.id)).orderBy(desc(todos.createdAt));
     }
     ```
 

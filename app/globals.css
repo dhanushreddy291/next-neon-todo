@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import '@neondatabase/neon-js/ui/tailwind';
+@import '@neondatabase/auth/ui/tailwind';
 
 :root {
   --background: #ffffff;

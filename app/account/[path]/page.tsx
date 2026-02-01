@@ -1,5 +1,5 @@
-import { AccountView } from '@neondatabase/neon-js/auth/react/ui';
-import { accountViewPaths } from '@neondatabase/neon-js/auth/react/ui/server';
+import { AccountView } from '@neondatabase/auth/react/ui';
+import { accountViewPaths } from '@neondatabase/auth/react/ui/server';
 
 export const dynamicParams = false;
 
